@@ -53,15 +53,19 @@ namespace EveOPreview.Presenters
 			this.LoadApplicationSettings();
 			this.View.SetDocumentationUrl(MainFormPresenter.FORUM_URL);
 			this.View.SetVersionInfo(this.GetApplicationVersion());
-			if (this._configuration.MinimizeToTray)
-			{
-				this.View.Minimize();
-			}
-
+			//if (this._configuration.MinimizeToTray)
+			//{
+			//	this.View.Minimize();
+			//}
 			this._mediator.Send(new StartService());
 			this._suppressSizeNotifications = false;
 		}
-
+		public void Restore()
+		{
+			this._suppressSizeNotifications = true;
+			this._mediator.Send(new StartService());
+			this._suppressSizeNotifications = false;
+		}
 		private void Minimize()
 		{
 			if (!this._configuration.MinimizeToTray)

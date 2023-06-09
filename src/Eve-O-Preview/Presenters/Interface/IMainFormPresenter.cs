@@ -7,7 +7,7 @@ namespace EveOPreview.Presenters
 	{
 		void AddThumbnails(IList<string> thumbnailTitles);
 		void RemoveThumbnails(IList<string> thumbnailTitles);
-
 		void UpdateThumbnailSize(Size size);
+		void Restore();
 	}
 }

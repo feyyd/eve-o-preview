@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using EveOPreview.Presenters;
 using EveOPreview.Services.Interop;
 
 namespace EveOPreview.Services.Implementation
@@ -9,16 +10,18 @@ namespace EveOPreview.Services.Implementation
 	{
 		#region Private constants
 		private const int WINDOW_SIZE_THRESHOLD = 300;
-		#endregion
+        private readonly IMainFormPresenter _mainFormPresenter;
+        #endregion
 
-		public WindowManager()
+        public WindowManager(MainFormPresenter mainFormPresenter)
 		{
 			// Composition is always enabled for Windows 8+
 			this.IsCompositionEnabled = 
 				((Environment.OSVersion.Version.Major == 6) && (Environment.OSVersion.Version.Minor >= 2)) // Win 8 and Win 8.1
 				|| (Environment.OSVersion.Version.Major >= 10) // Win 10
 				|| DwmNativeMethods.DwmIsCompositionEnabled(); // In case of Win 7 an API call is requiredWin 7
-		}
+            _mainFormPresenter = mainFormPresenter;
+        }
 
 		public bool IsCompositionEnabled { get; }
 
@@ -39,7 +42,13 @@ namespace EveOPreview.Services.Implementation
 			}
 		}
 
-		public void MinimizeWindow(IntPtr handle, bool enableAnimation)
+		public void ThumbnailToFront(IntPtr mainProgramHandle)
+		{
+			_mainFormPresenter.Restore();
+			User32NativeMethods.SetForegroundWindow(mainProgramHandle);
+		}
+
+        public void MinimizeWindow(IntPtr handle, bool enableAnimation)
 		{
 			if (enableAnimation)
 			{

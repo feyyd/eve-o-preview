@@ -402,14 +402,16 @@ namespace EveOPreview.Services
 				return;
 			}
 
-			this._isHoverEffectActive = true;
-
-			IThumbnailView view = this._thumbnailViews[id];
-
-			if ( _configuration.ShowThumbnailsAlwaysOnTop ) view.SetTopMost(true);
+            //Activate main window and immediately minimize to bring to front, without this
+            //the thumbnail gets stuck in the always on top mode, even when disabling TopMost
+            _windowManager.ThumbnailToFront(this._processMonitor.GetMainProcess().Handle);
+            this._isHoverEffectActive = true;
+			
+            IThumbnailView view = this._thumbnailViews[id];
+            
+			view.SetTopMost(true);
 			view.SetOpacity(1.0);
-
-			if (this._configuration.ThumbnailZoomEnabled)
+            if (this._configuration.ThumbnailZoomEnabled)
 			{
 				this.ThumbnailZoomIn(view);
 			}
@@ -423,14 +425,13 @@ namespace EveOPreview.Services
 			}
 
 			IThumbnailView view = this._thumbnailViews[id];
-
 			if (this._configuration.ThumbnailZoomEnabled)
 			{
 				this.ThumbnailZoomOut(view);
 			}
-			if ( _configuration.ShowThumbnailsAlwaysOnTop ) view.SetTopMost(false);
-            view.SetOpacity(this._configuration.ThumbnailOpacity);
-
+			if (!this._configuration.ShowThumbnailsAlwaysOnTop) view.SetTopMost(false);
+			view.SetOpacity(this._configuration.ThumbnailOpacity);
+			
 			this._isHoverEffectActive = false;
 		}
 
@@ -540,7 +541,7 @@ namespace EveOPreview.Services
 
 			view.ZoomOut();
 			view.Refresh(false);
-
+			view.SetTopMost(false);
 			this.EnableViewEvents();
 		}
 
