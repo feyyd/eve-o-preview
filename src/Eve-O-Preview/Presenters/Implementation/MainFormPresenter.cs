@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Threading;
 using EveOPreview.Configuration;
 using EveOPreview.Mediator.Messages;
 using EveOPreview.View;
@@ -13,6 +14,7 @@ namespace EveOPreview.Presenters
 	{
 		#region Private constants
 		private const string FORUM_URL = @"https://forum.eveonline.com/t/4202";
+		private DispatcherTimer _timerMinimizeOnce;
 		#endregion
 
 		#region Private fields
@@ -45,7 +47,25 @@ namespace EveOPreview.Presenters
 			this.View.ThumbnailStateChanged = this.UpdateThumbnailState;
 			this.View.DocumentationLinkActivated = this.OpenDocumentationLink;
 			this.View.ApplicationExitRequested = this.ExitApplication;
-		}
+
+            this._timerMinimizeOnce = new DispatcherTimer();
+            this._timerMinimizeOnce.Tick += MinimizeWindowAfterLoad;
+            this._timerMinimizeOnce.Interval = new TimeSpan(0, 0, 0, 0, 1000);
+			this._timerMinimizeOnce.Start();
+        }
+
+		/// <summary>
+		/// I am able to solve the always on top bugs by bringing focus to the Main Program window, however,
+		/// minimizing/closing before the program is fully initialized was not allowing focus to be changed
+		/// if the program is in the tray. This single run timer executes after start to minimize the window.
+		/// </summary>
+		private void MinimizeWindowAfterLoad(object sender, EventArgs e)
+		{
+			if (_configuration.MinimizeToTray)
+				this.Minimize();
+
+            this._timerMinimizeOnce.Stop();
+        }
 
 		private void Activate()
 		{
@@ -53,10 +73,6 @@ namespace EveOPreview.Presenters
 			this.LoadApplicationSettings();
 			this.View.SetDocumentationUrl(MainFormPresenter.FORUM_URL);
 			this.View.SetVersionInfo(this.GetApplicationVersion());
-			//if (this._configuration.MinimizeToTray)
-			//{
-			//	this.View.Minimize();
-			//}
 			this._mediator.Send(new StartService());
 			this._suppressSizeNotifications = false;
 		}
