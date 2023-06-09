@@ -97,8 +97,10 @@ namespace EveOPreview.Services
 		private void EnableDisableThumbnails()
 		{
             var characters = _thumbnailViews.Values.ToList();
-			//Need to add logic here depending on whether or not we want the thumbnails to show when login screens are on, up for discussion in pull request
+            //Need to add logic here depending on whether or not we want the thumbnails to show when login screens are on, up for discussion in pull request
             bool refreshEnabled = characters.Count > 1;
+			if (!_configuration.HideThumbnailsOnSingleClient)
+                refreshEnabled = true;
             foreach (var c in characters)
                 _configuration.ToggleThumbnail(c.Title, !refreshEnabled);
         }
