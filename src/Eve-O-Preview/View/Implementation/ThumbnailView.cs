@@ -208,11 +208,6 @@ namespace EveOPreview.View
 
 		public void SetTopMost(bool enableTopmost)
 		{
-			if (this._isTopMost == enableTopmost)
-			{
-				return;
-			}
-
 			this._overlay.TopMost = enableTopmost;
 			this.TopMost = enableTopmost;
 

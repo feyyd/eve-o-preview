@@ -390,7 +390,7 @@ namespace EveOPreview.Services
 
 			IThumbnailView view = this._thumbnailViews[id];
 
-			view.SetTopMost(true);
+			if ( _configuration.ShowThumbnailsAlwaysOnTop ) view.SetTopMost(true);
 			view.SetOpacity(1.0);
 
 			if (this._configuration.ThumbnailZoomEnabled)
@@ -412,8 +412,8 @@ namespace EveOPreview.Services
 			{
 				this.ThumbnailZoomOut(view);
 			}
-
-			view.SetOpacity(this._configuration.ThumbnailOpacity);
+			if ( _configuration.ShowThumbnailsAlwaysOnTop ) view.SetTopMost(false);
+            view.SetOpacity(this._configuration.ThumbnailOpacity);
 
 			this._isHoverEffectActive = false;
 		}
