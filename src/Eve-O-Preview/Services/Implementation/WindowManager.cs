@@ -41,10 +41,14 @@ namespace EveOPreview.Services.Implementation
 				User32NativeMethods.ShowWindowAsync(handle, InteropConstants.SW_RESTORE);
 			}
 		}
-
+		/// <summary>
+		/// Setting forground on main window has better behaviour than the AlwaysOnTop behaviour on the thumbnail views so using it here.
+		/// The window will not show if it is minimized despite setting it to the foreground.
+		/// </summary>
+		/// <param name="mainProgramHandle"></param>
 		public void ThumbnailToFront(IntPtr mainProgramHandle)
 		{
-			_mainFormPresenter.Restore();
+			User32NativeMethods.SetWindowPos(mainProgramHandle, 0, 0, 0, 0, InteropConstants.SWP_NOMOVE | InteropConstants.SWP_NOSIZE | InteropConstants.SWP_SHOWWINDOW);
 			User32NativeMethods.SetForegroundWindow(mainProgramHandle);
 		}
 

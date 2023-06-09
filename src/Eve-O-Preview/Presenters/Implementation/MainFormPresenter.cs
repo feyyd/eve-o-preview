@@ -62,10 +62,10 @@ namespace EveOPreview.Presenters
 		private void MinimizeWindowAfterLoad(object sender, EventArgs e)
 		{
 			if (_configuration.MinimizeToTray)
-				this.Minimize();
+				this.View.Minimize();
 
-            this._timerMinimizeOnce.Stop();
-        }
+			_timerMinimizeOnce.Stop();
+		}
 
 		private void Activate()
 		{
@@ -73,12 +73,6 @@ namespace EveOPreview.Presenters
 			this.LoadApplicationSettings();
 			this.View.SetDocumentationUrl(MainFormPresenter.FORUM_URL);
 			this.View.SetVersionInfo(this.GetApplicationVersion());
-			this._mediator.Send(new StartService());
-			this._suppressSizeNotifications = false;
-		}
-		public void Restore()
-		{
-			this._suppressSizeNotifications = true;
 			this._mediator.Send(new StartService());
 			this._suppressSizeNotifications = false;
 		}

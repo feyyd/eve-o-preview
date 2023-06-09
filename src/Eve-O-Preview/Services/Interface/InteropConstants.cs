@@ -79,5 +79,10 @@ namespace EveOPreview.Services
 		public const int SW_SHOWMINIMIZED = 2;
 		public const int SW_SHOWMAXIMIZED = 3;
 		public const int SW_RESTORE = 9;
-	}
+
+		public const UInt32 SWP_NOSIZE = 0x0001;
+		public const UInt32 SWP_NOMOVE = 0x0002;
+		public const UInt32 SWP_NOACTIVATE = 0x0010;
+		public const UInt32 SWP_SHOWWINDOW = 0x0040;
+    }
 }
